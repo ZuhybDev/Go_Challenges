@@ -25,53 +25,6 @@ A small, self-contained Go challenge implementing a simple inventory service. Th
 
    go build -o bin/inventory ./...
 
-3. Run (development mode):
-
-   # Run main package (if main is at repository root)
-   go run .
-
-   # Or run the built binary
-   ./bin/inventory
-
-Note: If the project provides a `cmd/` directory with a specific entrypoint, replace `.` with the appropriate path (for example `./cmd/server`).
-
-## Configuration
-
-The service may read configuration from environment variables. Typical options include:
-
-- PORT — HTTP port to listen on (default: 8080)
-- DATA_FILE — optional file path to persist data between runs
-
-Adjust according to the implementation in the repository.
-
-## API (example)
-
-If the challenge exposes an HTTP API, typical endpoints are:
-
-- GET  /items         — list all items
-- POST /items         — create a new item (JSON body)
-- GET  /items/{id}    — fetch one item by ID
-- PUT  /items/{id}    — update an existing item
-- DELETE /items/{id}  — remove an item
-
-Example curl requests:
-
-Create an item:
-
-  curl -X POST -H "Content-Type: application/json" \
-    -d '{"name":"Widget","quantity":10,"price":9.99}' http://localhost:8080/items
-
-List items:
-
-  curl http://localhost:8080/items
-
-## Tests
-
-Run unit tests with:
-
-  go test ./...
-
-If there are test files included in the repo, this will run them and report results.
 
 ## Contributing
 
