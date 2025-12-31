@@ -51,7 +51,7 @@ func generateReport(inventory map[string]Product, reportType string, threshold i
 	sort.Strings(products)
 
 	fmt.Printf("=== %s REPORT ===\n", strings.ToUpper(reportType))
-	
+
 	if reportType == "low" {
 		fmt.Printf("Products with stock below %d:\n", threshold)
 		for _, name := range products {
@@ -83,9 +83,9 @@ func main() {
 	fmt.Scan(&operations)
 	fmt.Println("Enter crossponding products e.g `laptop mouse` ")
 	fmt.Scan(&parameters)
-	
+
 	inventory := make(map[string]Product)
-	
+
 	// Parse initial inventory data
 	items := strings.Split(initialData, ",")
 	for _, item := range items {
@@ -95,16 +95,16 @@ func main() {
 		quantity, _ := strconv.Atoi(parts[2])
 		inventory[name] = Product{Price: price, Quantity: quantity}
 	}
-	
+
 	// Display startup message
 	fmt.Println("=== INVENTORY MANAGEMENT SYSTEM ===")
 	fmt.Printf("System initialized with %d products\n", len(inventory))
 	fmt.Println("Starting interactive session...")
-	
+
 	// Parse operations and parameters
 	opList := strings.Split(operations, ",")
 	paramList := strings.Split(parameters, "|")
-	
+
 	// Process each operation
 	for i, operation := range opList {
 		switch operation {
@@ -118,7 +118,7 @@ func main() {
 			} else {
 				fmt.Printf("Stock level: %d units\n", quantity)
 			}
-			
+
 		case "add":
 			fmt.Println("--- ADD ITEM ---")
 			parts := strings.Split(paramList[i], ":")
@@ -132,7 +132,7 @@ func main() {
 			} else {
 				fmt.Println("Product added successfully")
 			}
-			
+
 		case "update":
 			fmt.Println("--- UPDATE STOCK ---")
 			parts := strings.Split(paramList[i], ":")
@@ -150,7 +150,7 @@ func main() {
 					fmt.Printf("Removed %d units. New stock: %d\n", -change, newQuantity)
 				}
 			}
-			
+
 		case "report":
 			fmt.Println("--- GENERATE REPORT ---")
 			parts := strings.Split(paramList[i], ",")
@@ -158,7 +158,7 @@ func main() {
 			threshold, _ := strconv.Atoi(parts[1])
 			fmt.Printf("Generating %s report with threshold %d\n", reportType, threshold)
 			generateReport(inventory, reportType, threshold)
-			
+
 		case "exit":
 			fmt.Println("--- SYSTEM EXIT ---")
 			totalProducts := len(inventory)
@@ -176,7 +176,7 @@ func main() {
 			fmt.Println("Thank you for using the Inventory Management System")
 			return
 		}
-		
+
 		if operation != "exit" {
 			fmt.Println("Operation completed. Continuing to next operation...")
 		}
