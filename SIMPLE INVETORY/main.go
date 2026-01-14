@@ -1,139 +1,182 @@
 package main
 
 import (
+	"errors"
 	"fmt"
-	"math"
 	"sort"
 	"strconv"
 	"strings"
 )
 
 type Product struct {
-	Name     string
 	Price    float64
 	Quantity int
 }
 
-func updateStock(inventory map[string]Product, quantity int, name string) error {
-	if _, ok := inventory[name]; !ok {
-		return fmt.Errorf("product not found: %s", name)
-	} else if qty, _ := inventory[name]; qty.Quantity+quantity < 0 {
-		absQty := int(math.Abs(float64(qty.Quantity)))
-		return fmt.Errorf("insufficient stock: cannot reduce %s by %d, only %d available", name, absQty, qty.Quantity)
-	} else {
-		qty := inventory[name]
-		inventory[name] = Product{
-			Quantity: qty.Quantity + quantity,
-			Price:    qty.Price,
-			Name:     qty.Name,
-		}
-
+func checkStock(inventory map[string]Product, productName string) (int, error) {
+	product, exists := inventory[productName]
+	if !exists {
+		return 0, errors.New("product not found")
 	}
+	return product.Quantity, nil
+}
 
+func addNewItem(inventory map[string]Product, name string, price float64, quantity int) error {
+	if _, exists := inventory[name]; exists {
+		return errors.New("product already exists")
+	}
+	inventory[name] = Product{Price: price, Quantity: quantity}
 	return nil
 }
 
+func updateStock(inventory map[string]Product, productName string, change int) error {
+	product, exists := inventory[productName]
+	if !exists {
+		return errors.New("product not found")
+	}
+	newQuantity := product.Quantity + change
+	if newQuantity < 0 {
+		return errors.New("insufficient stock")
+	}
+	product.Quantity = newQuantity
+	inventory[productName] = product
+	return nil
+}
+
+func generateReport(inventory map[string]Product, reportType string, threshold int) {
+	var products []string
+	for name := range inventory {
+		products = append(products, name)
+	}
+	sort.Strings(products)
+
+	fmt.Printf("=== %s REPORT ===\n", strings.ToUpper(reportType))
+
+	if reportType == "low" {
+		fmt.Printf("Products with stock below %d:\n", threshold)
+		for _, name := range products {
+			product := inventory[name]
+			if product.Quantity < threshold {
+				fmt.Printf("- %s: %d units (Price: $%.2f)\n", name, product.Quantity, product.Price)
+			}
+		}
+	} else if reportType == "full" {
+		fmt.Printf("Complete inventory (minimum threshold: %d):\n", threshold)
+		for _, name := range products {
+			product := inventory[name]
+			status := "OK"
+			if product.Quantity < threshold {
+				status = "LOW STOCK"
+			}
+			fmt.Printf("- %s: %d units @ $%.2f each [%s]\n", name, product.Quantity, product.Price, status)
+		}
+	}
+}
+
 func main() {
+	var initialData string
+	var operations string
+	var parameters string
 
-	var existingData string = "Laptop:999.99:5"
-	var updatingData string = "Laptop:4"
+	fmt.Scanln(&initialData)
+	fmt.Scanln(&operations)
+	fmt.Scanln(&parameters)
 
-	fmt.Scanln(&existingData)
-	fmt.Scanln(&updatingData)
+	inventory := make(map[string]Product)
 
-	productEntries := strings.Split(existingData, ",")
+	// Parse initial inventory data
+	items := strings.Split(initialData, ",")
+	for _, item := range items {
+		parts := strings.Split(item, ":")
+		name := parts[0]
+		price, _ := strconv.ParseFloat(parts[1], 64)
+		quantity, _ := strconv.Atoi(parts[2])
+		inventory[name] = Product{Price: price, Quantity: quantity}
+	}
 
-	inventory := map[string]Product{}
-	for _, product := range productEntries {
-		trimmedList := strings.TrimSpace(product)
-		entry := strings.Split(trimmedList, ":")
+	// Display startup message
+	fmt.Println("=== INVENTORY MANAGEMENT SYSTEM ===")
+	fmt.Printf("System initialized with %d products\n", len(inventory))
+	fmt.Println("Starting interactive session...")
 
-		name := entry[0]
-		price, _ := strconv.ParseFloat(entry[1], 64)
-		quantity, _ := strconv.Atoi(entry[2])
+	// Parse operations and parameters
+	opList := strings.Split(operations, ",")
+	paramList := strings.Split(parameters, "|")
 
-		inventory[name] = Product{
-			Name:     name,
-			Price:    price,
-			Quantity: quantity,
+	// Process each operation
+	for i, operation := range opList {
+		switch operation {
+		case "check":
+			fmt.Println("--- STOCK CHECK ---")
+			productName := paramList[i]
+			fmt.Printf("Checking stock for: %s\n", productName)
+			quantity, err := checkStock(inventory, productName)
+			if err != nil {
+				fmt.Println("Product not found in inventory")
+			} else {
+				fmt.Printf("Stock level: %d units\n", quantity)
+			}
+
+		case "add":
+			fmt.Println("--- ADD ITEM ---")
+			parts := strings.Split(paramList[i], ":")
+			name := parts[0]
+			price, _ := strconv.ParseFloat(parts[1], 64)
+			quantity, _ := strconv.Atoi(parts[2])
+			fmt.Printf("Adding new product: %s\n", name)
+			err := addNewItem(inventory, name, price, quantity)
+			if err != nil {
+				fmt.Printf("Failed to add product: %s\n", err.Error())
+			} else {
+				fmt.Println("Product added successfully")
+			}
+
+		case "update":
+			fmt.Println("--- UPDATE STOCK ---")
+			parts := strings.Split(paramList[i], ":")
+			productName := parts[0]
+			change, _ := strconv.Atoi(parts[1])
+			fmt.Printf("Updating stock for: %s\n", productName)
+			err := updateStock(inventory, productName, change)
+			if err != nil {
+				fmt.Printf("Update failed: %s\n", err.Error())
+			} else {
+				newQuantity := inventory[productName].Quantity
+				if change >= 0 {
+					fmt.Printf("Added %d units. New stock: %d\n", change, newQuantity)
+				} else {
+					fmt.Printf("Removed %d units. New stock: %d\n", -change, newQuantity)
+				}
+			}
+
+		case "report":
+			fmt.Println("--- GENERATE REPORT ---")
+			parts := strings.Split(paramList[i], ",")
+			reportType := parts[0]
+			threshold, _ := strconv.Atoi(parts[1])
+			fmt.Printf("Generating %s report with threshold %d\n", reportType, threshold)
+			generateReport(inventory, reportType, threshold)
+
+		case "exit":
+			fmt.Println("--- SYSTEM EXIT ---")
+			totalProducts := len(inventory)
+			totalItems := 0
+			totalValue := 0.0
+			for _, product := range inventory {
+				totalItems += product.Quantity
+				totalValue += float64(product.Quantity) * product.Price
+			}
+			fmt.Println("Final inventory status:")
+			fmt.Printf("Total products: %d\n", totalProducts)
+			fmt.Printf("Total items: %d\n", totalItems)
+			fmt.Printf("Total value: $%.2f\n", totalValue)
+			fmt.Println("Session completed successfully")
+			fmt.Println("Thank you for using the Inventory Management System")
+			return
 		}
-	}
-	processedItems := 0
-	successfulItems := 0
-	failedItems := 0
-	stockUpdates := strings.Split(updatingData, ",")
-	fmt.Println("Processing Stock Updates:")
 
-	var failedProducts []string
-
-	for _, product := range stockUpdates {
-		trimmedData := strings.TrimSpace(product)
-
-		entry := strings.Split(trimmedData, ":")
-
-		name := entry[0]
-		quantity, _ := strconv.Atoi(entry[1])
-		err := updateStock(inventory, quantity, name)
-		key, _ := inventory[name]
-		if err != nil {
-			fmt.Printf("%s: Update failed - %v\n", name, err)
-			failedProducts = append(failedProducts, name)
-			failedItems++
-		} else if quantity > 0 {
-			fmt.Printf("%s: Added %d units - New stock: %d\n", name, quantity, key.Quantity)
-			successfulItems++
-		} else if quantity < 0 {
-			fmt.Printf("%s: Removed %d units - New stock: %d\n", name, -quantity, key.Quantity)
-			successfulItems++
-		} else {
-			fmt.Printf("%s: No change - Current stock: %d\n", name, key.Quantity)
-			successfulItems++
+		if operation != "exit" {
+			fmt.Println("Operation completed. Continuing to next operation...")
 		}
-
-		processedItems++
-
-	}
-
-	fmt.Println("Update Summary:")
-	fmt.Printf("Updates processed: %d\n", processedItems)
-	fmt.Printf("Updates successful: %d\n", successfulItems)
-	fmt.Printf("Updates failed: %d\n", failedItems)
-
-	//"Final Inventory Statistics:"
-
-	totalStock := 0
-	totalRevenue := 0.0
-	fmt.Println("Updated Inventory:")
-
-	sortedList := make([]Product, 0)
-	for _, pro := range inventory {
-		totalStock += pro.Quantity
-		totalRevenue += pro.Price * float64(pro.Quantity)
-
-		sortedList = append(sortedList, Product{
-			Name:     pro.Name,
-			Price:    pro.Price,
-			Quantity: pro.Quantity,
-		})
-	}
-
-	sort.Slice(sortedList, func(i, j int) bool {
-		return sortedList[i].Name < sortedList[j].Name
-	})
-
-	for _, pro := range sortedList {
-		fmt.Printf("- %s: $%.2f (Stock: %d)\n", pro.Name, pro.Price, pro.Quantity)
-	}
-
-	fmt.Println("Final Inventory Statistics:")
-	fmt.Printf("Total Products: %d\n", len(inventory))
-	fmt.Printf("Total Items in Stock: %d\n", totalStock)
-	fmt.Printf("Total Inventory Value: $%.2f\n", totalRevenue)
-
-	if len(failedProducts) == 0 {
-
-		fmt.Println("All stock updates were processed successfully")
-	} else {
-		fmt.Printf("Failed updates: %s\n", strings.Join(failedProducts, ","))
 	}
 }
