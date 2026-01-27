@@ -1,6 +1,6 @@
 ![image](goChallengeImage.jpg)
 
-# go_challenges 🧠⚡
+# Go Challenges 🧠⚡
 
 ---
 
