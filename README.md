@@ -1,4 +1,4 @@
-![image](goChallengeImage)
+![image](goChallengeImage.jpg)
 
 # go_challenges 🧠⚡
 
