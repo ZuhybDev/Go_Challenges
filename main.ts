@@ -1,11 +1,13 @@
-const freqLetter = (letters: string[]) => {
-  const freq: Record<string, number> = {};
+const isEvenOrOdd = (n: number) => {
+  let num = n % 2;
 
-  for (const letter of letters) {
-    freq[letter] = (freq[letter] || 0) + 1;
+  if (num != 0) {
+    return false;
   }
-  console.log(freq);
+
+  return true;
 };
 
-const letter = ["A", "B", "C", "D", "E", "A"];
-console.log(freqLetter(letter));
+console.log(isEvenOrOdd(10));
+console.log(isEvenOrOdd(15));
+console.log(isEvenOrOdd(40));

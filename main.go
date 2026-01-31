@@ -2,90 +2,70 @@ package main
 
 import (
 	"fmt"
+	"slices"
 	"strconv"
 	"strings"
-	"time"
 )
 
-type FirstAid struct {
-	Essentials string
-	Aid        string
-	ExpireDate time.Time
-	Quantity   int
+type Orders struct {
+	Vendor   string
+	Quantity int
 }
 
-func evaluateFirstAidKit(supplies []string, householdSize int, currentDate string) bool {
+func processMarketInventory(inventory []string, sales []string) []string {
 
-	suppliesData := make([]FirstAid, 0)
+	inventoryMap := make(map[string]Orders)
 
-	suppliesParts := make([]string, 0)
+	for _, v := range inventory {
+		entries := strings.Split(v, ":")
 
-	layout := "2006-01-02"
-	formattedDate, _ := time.Parse(layout, currentDate)
+		vendor := entries[0]
+		name := entries[1]
+		quantity, _ := strconv.Atoi(entries[2])
 
-	for _, v := range supplies {
-		suppliesEntry := strings.Split(v, ",")
-
-		suppliesParts = append(suppliesParts, suppliesEntry...)
-
-	}
-
-	for _, v := range suppliesParts {
-		parts := strings.Split(v, ":")
-
-		essen := parts[0]
-		aid := parts[1]
-		expireDate, _ := time.Parse(layout, parts[2])
-		quantity, _ := strconv.Atoi(parts[3])
-
-		suppliesData = append(suppliesData,
-			FirstAid{
-				Essentials: essen,
-				Aid:        aid,
-				ExpireDate: expireDate,
-				Quantity:   quantity,
-			},
-		)
-	}
-
-	if len(suppliesData) < 3 {
-		return false
-	}
-
-	limit := 3
-
-	if len(suppliesData) < limit {
-		limit = len(suppliesData)
-	}
-
-	for _, v := range suppliesData[:limit] {
-
-		if householdSize == 0 {
-			fmt.Println("ERROR: house hold size must be greater then Zero")
-		}
-
-		if v.Quantity%householdSize != 0 {
-			return false
-		}
-
-		// expire check
-		if v.ExpireDate.Before(formattedDate) {
-			return false
+		inventoryMap[name] = Orders{
+			Vendor:   vendor,
+			Quantity: quantity,
 		}
 
 	}
 
-	return true
+	soldOutItems := make([]string, 0)
+
+	for _, sale := range sales {
+		entries := strings.Split(strings.TrimSpace(sale), ":")
+
+		name := entries[0]
+		amount, _ := strconv.Atoi(entries[1])
+
+		if value, ok := inventoryMap[name]; ok {
+
+			value.Quantity -= amount
+			inventoryMap[name] = value
+			if value.Quantity < 0 || value.Quantity == 0 {
+				soldOutItems = append(soldOutItems, name)
+			}
+
+		} else {
+			fmt.Println("Items does'nt exist")
+		}
+
+	}
+
+	slices.Reverse(soldOutItems)
+
+	return soldOutItems
 }
 
 func main() {
-	supplies := []string{
-		"bandages:first_aid:2025-01-01:4, antiseptic:wound_care:2025-01-01:4, pain_reliever:medication:2025-01-01:4",
+
+	inventory := []string{
+		"I:fig:2", "J:grape:2", "K:fig:3",
+	}
+	sales := []string{
+		"fig:5", "grape:2",
 	}
 
-	householdSize := 2
-	currentDate := "2024-01-01"
-
-	evaluateFirstAidKit(supplies, householdSize, currentDate)
+	processMarketInventory(inventory, sales)
 
 }
