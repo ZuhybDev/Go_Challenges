@@ -2,24 +2,23 @@ package main
 
 import (
 	"fmt"
-	"strings"
+	"log"
+	"net/http"
 )
 
 func main() {
-	// Read input
-	var teamMembersInput string
-	var peopleToCheckInput string
-	fmt.Scanln(&teamMembersInput)
-	fmt.Scanln(&peopleToCheckInput)
 
-	// Parse input strings
-	teamMembers := strings.Split(teamMembersInput, ",")
-	peopleToCheck := strings.Split(peopleToCheckInput, ",")
+	http.HandleFunc("/hello", helloHandler)
+	fmt.Println("Server starts at :8080")
+	log.Fatal(http.ListenAndServe(":8080", nil))
+}
 
-	// TODO: Write your code below
-	// Create a set using map[string]struct{}
-	// Add team members to the set
-	// Check each person using the comma ok idiom
-	// Display verification results and summary
+func helloHandler(w http.ResponseWriter, r *http.Request) {
+	method := r.Method
 
+	path := r.URL.Path
+	query := r.URL.Query().Get("id")
+
+	fmt.Fprintf(w, "You sent a %s request to %s with ID %s\n",
+		method, path, query)
 }

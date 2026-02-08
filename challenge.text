@@ -61,3 +61,4 @@ Display: "Thank you for using the Inventory Management System"
 After each operation (except exit), display: "Operation completed. Continuing to next operation..."
 Use the strings package to split input strings, the strconv package to convert strings to numbers, the errors package for error handling, the fmt package for formatted output, and the sort package for alphabetical sorting. Format all prices and values to 2 decimal places. This challenge demonstrates how to create a complete interactive system that integrates multiple functional components into a cohesive user experience with proper error handling and state management.
 
+
