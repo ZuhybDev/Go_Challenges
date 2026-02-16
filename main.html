@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Crypto Code Editor</title>
+</head>
+<body class="bg-slate-950 flex items-center justify-center min-h-screen p-6">
+
+    <div class="max-w-4xl w-full">
+        <div class="flex items-end">
+            <div class="group flex items-center space-x-3 bg-slate-900 text-slate-300 text-xs py-2 px-4 rounded-t-lg border-t border-x border-slate-700 font-mono">
+                <span class="text-yellow-500 font-bold italic">JS</span>
+                <span class="font-medium">App.js</span>
+                <button class="flex items-center justify-center w-4 h-4 rounded hover:bg-slate-800 hover:text-red-500 transition-colors">
+                    ✕
+                </button>
+            </div>
+            <div class="group flex items-center space-x-3 bg-slate-900 text-slate-300 text-xs py-2 px-4 rounded-t-lg border-t border-x border-slate-700 font-mono">
+                <span class="text-yellow-500 font-bold italic">JS</span>
+                <span class="font-medium">package.json</span>
+                <button class="flex items-center justify-center w-4 h-4 rounded hover:bg-slate-800 hover:text-red-500 transition-colors">
+                    ✕
+                </button>
+            </div>
+        </div>
+
+        <div class="flex bg-slate-900 border border-slate-700 rounded-b-xl rounded-tr-xl shadow-2xl overflow-hidden font-mono text-sm">
+            
+            <div id="gutter" class="bg-slate-900/50 py-4 border-r border-slate-800 w-12 flex-shrink-0 text-right pr-3 select-none">
+                </div>
+
+            <div class="p-4 text-slate-300 overflow-x-auto leading-6 w-full">
+<pre><code><span class="text-pink-400">const</span> <span class="text-indigo-300">ethData</span> = {
+  <span class="text-slate-400">"name"</span>: <span class="text-emerald-400">"m6q5q3ynngq"</span>,
+  <span class="text-slate-400">"symbol"</span>: <span class="text-emerald-400">"ETH"</span>,
+  <span class="text-slate-400">"price"</span>: <span class="text-orange-300">0.37513463</span>,
+  <span class="text-slate-400">"is_active"</span>: <span class="text-orange-300">8655</span>,
+  <span class="text-slate-400">"tags"</span>: [<span class="text-emerald-400">"Web3"</span>, <span class="text-emerald-400">"DeFi"</span>]
+};
+
+<span class="text-indigo-300">console</span>.<span class="text-blue-400">log</span>(<span class="text-indigo-300">ethData</span>.<span class="text-indigo-300">price</span>);
+</code></pre>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const gutter = document.getElementById('gutter');
+        let lines = '';
+        
+        for (let i = 1; i <= 100; i++) {
+            // Using a template literal to build the string
+            lines += `<div class="text-slate-600 text-[10px] leading-6">${i}</div>`;
+        }
+        
+        gutter.innerHTML = lines;
+    </script>
+
+</body>
+</html>

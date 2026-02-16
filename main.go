@@ -1,24 +1,30 @@
 package main
 
-import (
-	"fmt"
-	"log"
-	"net/http"
-)
+import "fmt"
+
+func sumAndDivide(num1, num2 int) float64{
+
+    addingBoth := num1 + num2
+
+	sum := 0
+
+for num1 <= num2 {
+   	sum += num1
+	num1++
+}
+
+result := float64(sum) / float64(addingBoth)
+
+return  result
+}
 
 func main() {
 
-	http.HandleFunc("/hello", helloHandler)
-	fmt.Println("Server starts at :8080")
-	log.Fatal(http.ListenAndServe(":8080", nil))
-}
+	var num1 int
+	var num2 int
 
-func helloHandler(w http.ResponseWriter, r *http.Request) {
-	method := r.Method
+	fmt.Scanln(&num1)
+	fmt.Scanln(&num2)
 
-	path := r.URL.Path
-	query := r.URL.Query().Get("id")
-
-	fmt.Fprintf(w, "You sent a %s request to %s with ID %s\n",
-		method, path, query)
+	sumAndDivide(num1, num2)
 }
