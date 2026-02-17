@@ -1,30 +1,41 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+)
 
-func sumAndDivide(num1, num2 int) float64{
+// Very optimized and for speed and memory safety and large datasets
+/*
+func generatePattern(n int) {
+    var line strings.Builder // drifting board
 
-    addingBoth := num1 + num2
-
-	sum := 0
-
-for num1 <= num2 {
-   	sum += num1
-	num1++
+    for i := n; i >= 1; i-- {
+        line.Reset()
+        for j := 1; j <= i; j++ {
+            line.WriteString(strconv.Itoa(j)) // Efficiently add numbers to the line
+        }
+        fmt.Println(line.String()) // Print the whole row at once
+    }
 }
+*/
 
-result := float64(sum) / float64(addingBoth)
+func generatePattern(n int) {
+	if n > 10 {
+		fmt.Println("The number should be less than 10")
+		return
+	}
 
-return  result
+	// Outer loop: Start at n, count down to 1
+	for i := n; i >= 1; i-- {
+		for j := 1; j <= i; j++ {
+			fmt.Print(j)
+		}
+		fmt.Println()
+	}
 }
 
 func main() {
+	n := 10 // example
 
-	var num1 int
-	var num2 int
-
-	fmt.Scanln(&num1)
-	fmt.Scanln(&num2)
-
-	sumAndDivide(num1, num2)
+	generatePattern(n)
 }
