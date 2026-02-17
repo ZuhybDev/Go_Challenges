@@ -25,7 +25,7 @@ Learning happens in the gap between *your attempt* and *a better one*.
 
 1.  **Read** the challenge description.
 2.  **Solve** it your way first.
-3.  **Compare** with the `/solutions` (use them as reference, not gospel).
+3.  **Compare** with the `solutions` (use them as reference, not gospel).
 4.  **Refactor** and optimize until it feels like "clean Go."
 
 ---
