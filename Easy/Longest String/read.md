@@ -1,1 +1,0 @@
-We have an array like this: ["abc", "coddy", "golang", "java"]. Write a function that print the longest string in the array along with the number of characters in that string. For example, in this array, the expected output should be golang 6.
