@@ -1,41 +1,30 @@
 package main
 
-import (
-	"fmt"
-)
-
-// Very optimized and for speed and memory safety and large datasets
-/*
-func generatePattern(n int) {
-    var line strings.Builder // drifting board
-
-    for i := n; i >= 1; i-- {
-        line.Reset()
-        for j := 1; j <= i; j++ {
-            line.WriteString(strconv.Itoa(j)) // Efficiently add numbers to the line
-        }
-        fmt.Println(line.String()) // Print the whole row at once
-    }
-}
-*/
-
-func generatePattern(n int) {
-	if n > 10 {
-		fmt.Println("The number should be less than 10")
-		return
-	}
-
-	// Outer loop: Start at n, count down to 1
-	for i := n; i >= 1; i-- {
-		for j := 1; j <= i; j++ {
-			fmt.Print(j)
-		}
-		fmt.Println()
-	}
-}
+import "fmt"
 
 func main() {
-	n := 10 // example
 
-	generatePattern(n)
+	res := []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
+
+	sum := 0
+
+	min := res[0]
+	max := res[1]
+	for i, v := range res {
+
+		sum += v
+
+		if max < res[i] {
+			max = res[i]
+		}
+
+		if min > res[i] {
+			min = res[i]
+		}
+	}
+
+	fmt.Println("Sum: ", sum)
+
+	fmt.Println("Max: ", max)
+	fmt.Println("Min: ", min)
 }
