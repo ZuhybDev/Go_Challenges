@@ -3,28 +3,22 @@ package main
 import "fmt"
 
 func main() {
+	// Example with an odd number of elements
+	oddArray := []int{100, 4, 6, 45, 8, 8, 67}
+	middleIndexOdd := len(oddArray) / 2
+	middleElementOdd := oddArray[middleIndexOdd]
+	fmt.Printf("Odd length array: %v\n", oddArray)
+	fmt.Printf("Middle element (index %d): %d\n\n", middleIndexOdd, middleElementOdd)
 
-	res := []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
+	// Example with an even number of elements
+	evenSlice := []string{"apple", "banana", "cherry", "date"}
+	middleIndexEven := len(evenSlice) / 2 // 4 / 2 = 2
 
-	sum := 0
+	fmt.Printf("Even length slice: %v\n", evenSlice)
 
-	min := res[0]
-	max := res[1]
-	for i, v := range res {
-
-		sum += v
-
-		if max < res[i] {
-			max = res[i]
-		}
-
-		if min > res[i] {
-			min = res[i]
-		}
-	}
-
-	fmt.Println("Sum: ", sum)
-
-	fmt.Println("Max: ", max)
-	fmt.Println("Min: ", min)
+	// For an even length, you may consider one or both of the two middle elements
+	// The index calculation gives the second of the two middle elements
+	middleElementEven1 := evenSlice[middleIndexEven-1]
+	middleElementEven2 := evenSlice[middleIndexEven]
+	fmt.Printf("Middle elements (indices %d and %d): %s and %s\n", middleIndexEven-1, middleIndexEven, middleElementEven1, middleElementEven2)
 }
