@@ -18,6 +18,9 @@ func performOperations(nums []int) {
 
 	}
 
+	m := "main"
+	fmt.Println("dherer: ", len(m))
+
 	result = sumOfEven + sumOfOdd
 
 	fmt.Println(result)
