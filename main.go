@@ -2,30 +2,22 @@ package main
 
 import "fmt"
 
-func performOperations(nums []int) {
+func nonRepeatedIndices(arr []string) []int  {
+	
+    dataMap := make(map[int]struct)
+    result := make([]int, 0)
 
-	result := 0
-	sumOfEven := 1
-	sumOfOdd := 1
+    for i := range arr {
+        if _, ok := dataMap[i]; ok {
+            delete(dataMap, i)
+        }else {
+            result = append(result, i)
+            dataMap[i] = struct{}{}
+        }
+    }
 
-	for _, n := range nums {
-
-		if n%2 == 0 {
-			sumOfEven *= n
-		} else {
-			sumOfOdd *= n
-		}
-
-	}
-
-	m := "main"
-	fmt.Println("dherer: ", len(m))
-
-	result = sumOfEven + sumOfOdd
-
-	fmt.Println(result)
+ return result   
 }
-
 func main() {
 
 	nums := []int{20, 67, 456, 89, 9, 122, 33}
