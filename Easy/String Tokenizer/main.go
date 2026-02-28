@@ -1,15 +1,15 @@
-func insertSpace(str string , n int) string {
+func insertSpace(str string, n int) string {
 
- var modified string
+	var modified string
 
- for i, v := range str {
-    if i % n == 0 && i != 0 {
-        modified += " "
-    }
-    
-        modified += string(v)
-    
- }
+	for i, v := range str {
+		if i%n == 0 && i != 0 {
+			modified += " "
+		}
 
-     return modified
+		modified += string(v)
+
+	}
+
+	return modified
 }

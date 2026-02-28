@@ -1,1 +1,1 @@
-
+const user = inp
