@@ -1,3 +1,7 @@
+// Abundant Number
+// Purpose: Determine whether a positive integer is an abundant number
+// Example: call `isAbundantNumber(96)` — the program prints the result to stdout
+// Note: This is documentation only; no logic changes were made.
 package main
 
 import "fmt"
