@@ -1,25 +1,51 @@
 package main
 
-func nonRepeatedIndices(arr []string) []int {
+import (
+	"fmt"
+	"os"
+)
 
-	dataMap := make(map[int]struct{})
-	result := make([]int, 0)
+func createFile() {
+	file, err := os.Create("text.txt")
 
-	for i := range arr {
-		if _, ok := dataMap[i]; ok {
-			delete(dataMap, i)
-		} else {
-			result = append(result, i)
-			dataMap[i] = struct{}{}
-		}
+	if err != nil {
+		fmt.Println("Error while creating", err)
 	}
 
-	return result
+	fmt.Println(string(file.Name()))
 }
+
+func openFile() {
+	file, err := os.Open("text.txt")
+
+	if err != nil {
+		fmt.Println("Error while opening", err)
+	}
+
+	fmt.Println(file.Name())
+}
+
+func readFile() {
+	file, err := os.ReadFile("text.txt")
+
+	if err != nil {
+		fmt.Println("Error while reading", err)
+	}
+
+	fmt.Println(string(file))
+}
+
+// func writeFile() {
+// 	// err := os.WriteFile("text.txt", []byte("Hello i changes from inside function"))
+
+// 	if err != nil {
+// 		fmt.Println("Error while writing ", err)
+// 	}
+// }
+
 func main() {
-
-	nums := []string{"heloooo"}
-	// nums := []int{1, 2, 3, 4, 5, 6}
-
-	nonRepeatedIndices(nums)
+	fmt.Println("Hello World")
+	// createFile()
+	// openFile()
+	readFile()
 }
