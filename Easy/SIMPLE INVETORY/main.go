@@ -74,13 +74,13 @@ func generateReport(inventory map[string]Product, reportType string, threshold i
 }
 
 func main() {
-	var initialData string
-	var operations string
-	var parameters string
+	var initialData string = "apple:4:4"
+	var operations string = "apple:5:4:"
+	var parameters string = "check|add|update|report"
 
-	fmt.Scanln(&initialData)
-	fmt.Scanln(&operations)
-	fmt.Scanln(&parameters)
+	// fmt.Scanln(&initialData)
+	// fmt.Scanln(&operations)
+	// fmt.Scanln(&parameters)
 
 	inventory := make(map[string]Product)
 
