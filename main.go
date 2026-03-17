@@ -1,51 +1,30 @@
 package main
 
-import (
-	"fmt"
-	"os"
-)
+import "fmt"
 
-func createFile() {
-	file, err := os.Create("text.txt")
+func isValid(s string) bool {
+	stack := []rune{}
 
-	if err != nil {
-		fmt.Println("Error while creating", err)
+	pairs := map[rune]rune{
+		')': '(',
+		'}': '{',
+		']': '[',
 	}
 
-	fmt.Println(string(file.Name()))
-}
-
-func openFile() {
-	file, err := os.Open("text.txt")
-
-	if err != nil {
-		fmt.Println("Error while opening", err)
+	for _, ch := range s {
+		if ch == '(' || ch == '{' || ch == '[' {
+			stack = append(stack, ch)
+		} else {
+			if len(stack) == 0 || stack[len(stack)-1] != pairs[ch] {
+				return false
+			}
+			stack = stack[:len(stack)-1]
+		}
 	}
 
-	fmt.Println(file.Name())
+	return len(stack) == 0
 }
-
-func readFile() {
-	file, err := os.ReadFile("text.txt")
-
-	if err != nil {
-		fmt.Println("Error while reading", err)
-	}
-
-	fmt.Println(string(file))
-}
-
-// func writeFile() {
-// 	// err := os.WriteFile("text.txt", []byte("Hello i changes from inside function"))
-
-// 	if err != nil {
-// 		fmt.Println("Error while writing ", err)
-// 	}
-// }
 
 func main() {
-	fmt.Println("Hello World")
-	// createFile()
-	// openFile()
-	readFile()
+	fmt.Println(isValid("()")) // true
 }
